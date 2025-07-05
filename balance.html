@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Balance - BankWow</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* General Styles (Copied from previous style.css for self-containment) */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f7f6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background-color: #004085; /* Dark blue */
+            color: #fff;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        nav ul {
+            list-style: none;
+        }
+
+        nav ul li {
+            display: inline-block;
+            margin-left: 25px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 400;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: #a0d1ff; /* Lighter blue on hover */
+        }
+
+        .cta-button {
+            background-color: #28a745; /* Green */
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background-color: #218838; /* Darker green on hover */
+        }
+
+        /* Page Hero Section */
+        .page-hero {
+            background: linear-gradient(to right, #0056b3, #007bff);
+            color: #fff;
+            padding: 60px 0;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-hero h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .page-hero p {
+            font-size: 1.1em;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Content Section */
+        .content-section {
+            padding: 40px 0;
+            background-color: #fff;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .content-section h2.section-heading {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 50px;
+            color: #004085;
+        }
+
+        /* Account Balance Display */
+        .balance-display {
+            text-align: center;
+            background-color: #f0f8ff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            max-width: 500px;
+            margin: 40px auto; /* Centered with vertical margin */
+        }
+
+        .balance-display h3 {
+            font-size: 1.8em;
+            color: #0056b3;
+            margin-bottom: 20px;
+        }
+
+        .balance-amount {
+            font-size: 3.5em;
+            font-weight: 700;
+            color: #28a745; /* Green for positive balance */
+            margin-bottom: 20px;
+            display: block; /* Ensures it takes full width for centering */
+        }
+
+        .last-updated {
+            font-size: 0.9em;
+            color: #777;
+            margin-bottom: 20px; /* Space from refresh button */
+        }
+
+        .refresh-button {
+            background-color: #007bff; /* Blue */
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .refresh-button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+
+        /* Card Grid (for individual accounts) */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .card-item {
+            background-color: #f0f8ff; /* Light blue */
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .card-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-item h3 {
+            font-size: 1.5em;
+            color: #0056b3;
+            margin-bottom: 15px;
+        }
+
+        .card-item p {
+            font-size: 1.1em;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        /* Call to Action Section (Footer-like at end of main) */
+        .call-to-action {
+            background-color: #007bff; /* Blue */
+            color: #fff;
+            padding: 60px 0;
+            text-align: center;
+            margin-top: 40px; /* Space from content */
+        }
+
+        .call-to-action h2 {
+            font-size: 2.8em;
+            margin-bottom: 20px;
+        }
+
+        .call-to-action p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #004085;
+            color: #fff;
+            padding: 30px 0;
+            text-align: center;
+            margin-top: auto; /* Pushes footer to the bottom */
+            font-size: 0.9em;
+        }
+
+        footer .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-start;
+            text-align: left;
+        }
+
+        .footer-column {
+            flex: 1;
+            min-width: 200px;
+            margin: 15px;
+        }
+
+        .footer-column h4 {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            color: #a0d1ff;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-column ul li a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-column ul li a:hover {
+            color: #a0d1ff;
+        }
+
+        .social-icons a {
+            color: #fff;
+            font-size: 1.5em;
+            margin-right: 15px;
+        }
+
+        .social-icons a:hover {
+            color: #a0d1ff;
+        }
+
+        .copyright {
+            margin-top: 30px;
+            width: 100%;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            padding-top: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header .container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            nav ul {
+                margin-top: 15px;
+            }
+
+            nav ul li {
+                margin: 0 10px;
+            }
+
+            .page-hero h1 {
+                font-size: 2.2em;
+            }
+
+            .page-hero p {
+                font-size: 1em;
+            }
+
+            .footer-column {
+                margin: 10px 0;
+                text-align: center;
+            }
+
+            .footer-column:last-child {
+                margin-bottom: 0;
+            }
+
+            .balance-display {
+                margin: 20px auto;
+                padding: 25px;
+            }
+
+            .balance-display h3 {
+                font-size: 1.5em;
+            }
+
+            .balance-amount {
+                font-size: 2.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">BankWow</a>
+            <nav>
+                <ul>
+                    <li><a href="accounts.html">Accounts</a></li>
+                    <li><a href="loans.html">Loans</a></li>
+                    <li><a href="investments.html">Investments</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            <div>
+                <a href="#" class="cta-button">Login</a>
+                <a href="accounts.html" class="cta-button" style="margin-left: 10px;">Open Account</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="page-hero">
+            <div class="container">
+                <h1>Your Account Balance</h1>
+                <p>View your current funds and recent activity across your BankWow accounts.</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="container">
+                <h2 class="section-heading">Overview of Your Funds</h2>
+
+                <div class="balance-display">
+                    <h3>Total Available Balance</h3>
+                    <p class="balance-amount" id="currentBalance">$0.00</p>
+                    <p class="last-updated" id="lastUpdated">Last updated: Fetching...</p>
+                    <button class="refresh-button" id="refreshBalanceButton"><i class="fas fa-sync-alt"></i> Refresh Balance</button>
+                </div>
+
+                <p style="text-align: center; margin-top: 30px;">
+                    Below is a summary of your individual accounts. For detailed transaction history, please log in to your online banking portal.
+                </p>
+
+                <div class="card-grid" style="margin-top: 40px;">
+                    <div class="card-item">
+                        <h3><i class="fas fa-check-circle"></i> Checking Account</h3>
+                        <p>Account ending in: <strong>1234</strong></p>
+                        <p>Available Balance: <strong>$5,250.75</strong></p>
+                        <a href="#" class="cta-button">View Transactions</a>
+                    </div>
+                    <div class="card-item">
+                        <h3><i class="fas fa-piggy-bank"></i> Savings Account</h3>
+                        <p>Account ending in: <strong>5678</strong></p>
+                        <p>Available Balance: <strong>$18,920.10</strong></p>
+                        <a href="#" class="cta-button">View Transactions</a>
+                    </div>
+                    <div class="card-item">
+                        <h3><i class="fas fa-file-invoice-dollar"></i> Money Market</h3>
+                        <p>Account ending in: <strong>9012</strong></p>
+                        <p>Available Balance: <strong>$7,150.00</strong></p>
+                        <a href="#" class="cta-button">View Transactions</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="call-to-action">
+            <div class="container">
+                <h2>Ready for Your Next Transaction?</h2>
+                <p>Deposit, withdraw, or transfer funds conveniently.</p>
+                <a href="accounts.html#account-actions" class="cta-button">Manage Your Accounts</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-column">
+                <h4>Products</h4>
+                <ul>
+                    <li><a href="accounts.html#checking">Checking Accounts</a></li>
+                    <li><a href="accounts.html#savings">Savings Accounts</a></li>
+                    <li><a href="accounts.html#credit-cards">Credit Cards</a></li>
+                    <li><a href="loans.html#mortgages">Mortgages</a></li>
+                    <li><a href="loans.html#personal-loans">Personal Loans</a></li>
+                    <li><a href="investments.html">Investments</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="services.html#faqs">FAQs</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="services.html#branches">Branch Locator</a></li>
+                    <li><a href="services.html#security">Security & Fraud</a></li>
+                    <li><a href="services.html#accessibility">Accessibility</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>About BankWow</h4>
+                <ul>
+                    <li><a href="about.html">Our Story</a></li>
+                    <li><a href="about.html#careers">Careers</a></li>
+                    <li><a href="about.html#newsroom">Newsroom</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Connect With Us</h4>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2025 BankWow. All rights reserved. Member FDIC. Equal Housing Lender.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const balanceAmountElement = document.getElementById('currentBalance');
+            const lastUpdatedElement = document.getElementById('lastUpdated');
+            const refreshButton = document.getElementById('refreshBalanceButton');
+
+            // This is a highly simplified mock function.
+            // In a real application, this would make an AJAX request to a secure backend API
+            // to fetch the actual user's balance data.
+            const fetchAndDisplayBalance = () => {
+                if (balanceAmountElement && lastUpdatedElement) {
+                    // Simulate fetching data with a random delay
+                    balanceAmountElement.textContent = 'Loading...';
+                    lastUpdatedElement.textContent = 'Last updated: --';
+
+                    setTimeout(() => {
+                        const mockTotalBalance = (Math.random() * 25000 + 5000).toFixed(2); // Generates a random balance between $5,000 and $30,000
+                        const now = new Date();
+                        const lastUpdatedTime = now.toLocaleString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit',
+                            hour12: true
+                        });
+
+                        balanceAmountElement.textContent = `$${mockTotalBalance}`;
+                        lastUpdatedElement.textContent = `Last updated: ${lastUpdatedTime}`;
+                        console.log("Balance updated:", mockTotalBalance, "at", lastUpdatedTime);
+
+                        // You'd also update the individual account balances here if fetched from an API
+                        // For this example, individual balances remain static in HTML
+                    }, 1000); // Simulate 1-second network delay
+                }
+            };
+
+            // Fetch balance on page load
+            fetchAndDisplayBalance();
+
+            // Attach refresh functionality to the button
+            if (refreshButton) {
+                refreshButton.addEventListener('click', fetchAndDisplayBalance);
+            }
+        });
+    </script>
+</body>
+</html>
