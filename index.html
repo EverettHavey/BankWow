@@ -3,340 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BankWow</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Inter font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        /* style.css - Conceptual separation */
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #e2e8f0; /* Lighter blue-gray background */
-            display: flex;
-            flex-direction: column; /* Allow header/footer above/below main content */
-            justify-content: space-between; /* Push header to top, footer to bottom */
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 0; /* Remove body padding, container will handle it */
-            box-sizing: border-box;
-        }
-        header {
-            width: 100%;
-            background-color: #1a202c; /* Darker header */
-            color: #ffffff;
-            padding: 1rem 2rem;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-            display: flex;
-            justify-content: center; /* Center content horizontally */
-            align-items: center;
-            flex-shrink: 0; /* Prevent header from shrinking */
-        }
-        header .logo {
-            font-size: 2.25rem; /* text-4xl */
-            font-weight: 700; /* font-bold */
-            letter-spacing: -0.05em; /* tracking-tight */
-            color: #6366f1; /* Tailwind indigo-500 */
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        .main-content {
-            flex-grow: 1; /* Allow main content to take available space */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px; /* Padding for the main content area */
-            width: 100%; /* Ensure it takes full width */
-            box-sizing: border-box;
-        }
-        .container {
-            background-color: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* Stronger shadow */
-            padding: 32px;
-            max-width: 1000px; /* Slightly wider container */
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 28px; /* Slightly more gap */
-            margin: 20px 0; /* Vertical margin for container within main-content */
-        }
-        @media (min-width: 768px) {
-            .container {
-                flex-direction: row;
-                gap: 48px; /* More gap for larger screens */
-            }
-        }
-        .section {
-            flex: 1;
-            padding: 28px; /* More padding */
-            background-color: #f8fafc; /* Lighter section background */
-            border-radius: 12px;
-            box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.08); /* Stronger inset shadow */
-            border: 1px solid #e2e8f0; /* Subtle border */
-        }
-        .section h2 {
-            font-size: 2rem; /* Larger heading */
-            font-weight: 800; /* Extra bold */
-            color: #1f2937; /* Darker text for headings */
-            margin-bottom: 24px; /* More space below heading */
-            text-align: center;
-            position: relative;
-            padding-bottom: 10px;
-        }
-        .section h2::after {
-            content: '';
-            position: absolute;
-            left: 50%;
-            bottom: 0;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 4px;
-            background-color: #6366f1; /* Indigo accent line */
-            border-radius: 2px;
-        }
-        .balance-display {
-            background-image: linear-gradient(to right top, #4f46e5, #6366f1); /* Gradient background */
-            color: #ffffff;
-            padding: 28px; /* More padding */
-            border-radius: 12px;
-            text-align: center;
-            margin-bottom: 28px;
-            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4); /* Stronger shadow */
-            border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle white border */
-        }
-        .balance-display h3 {
-            font-size: 1.5rem; /* Larger sub-heading */
-            font-weight: 600;
-            margin-bottom: 10px;
-            opacity: 0.9;
-        }
-        .balance-display p {
-            font-size: 3.5rem; /* Even larger balance amount */
-            font-weight: 800;
-            line-height: 1;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-        .form-group {
-            margin-bottom: 24px; /* More spacing */
-        }
-        .form-group label {
-            display: block;
-            font-weight: 700; /* Bolder label */
-            color: #374151; /* Darker label text */
-            margin-bottom: 10px;
-            font-size: 1.05rem;
-        }
-        .form-group input {
-            width: 100%;
-            padding: 14px; /* More padding */
-            border: 2px solid #d1d5db; /* Thicker border */
-            border-radius: 10px; /* More rounded corners */
-            font-size: 1.1rem;
-            box-sizing: border-box;
-            transition: border-color 0.3s, box-shadow 0.3s;
-            background-color: #ffffff;
-        }
-        .form-group input:focus {
-            outline: none;
-            border-color: #4f46e5; /* Indigo */
-            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.3); /* Stronger focus shadow */
-        }
-        .btn {
-            width: 100%;
-            padding: 14px; /* More padding */
-            border: none;
-            border-radius: 10px; /* More rounded corners */
-            font-size: 1.2rem; /* Larger font */
-            font-weight: 700; /* Bolder font */
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
-            color: #ffffff;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Stronger shadow */
-            text-transform: uppercase; /* Uppercase text */
-            letter-spacing: 0.05em;
-        }
-        .btn-deposit {
-            background-image: linear-gradient(to right, #22c55e, #10b981); /* Green gradient */
-        }
-        .btn-deposit:hover {
-            background-image: linear-gradient(to right, #16a34a, #059669);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(34, 197, 94, 0.4);
-        }
-        .btn-withdraw {
-            background-image: linear-gradient(to right, #ef4444, #dc2626); /* Red gradient */
-        }
-        .btn-withdraw:hover {
-            background-image: linear-gradient(to right, #dc2626, #b91c1c);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
-        }
-        .message-box {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #333;
-            color: white;
-            padding: 14px 24px; /* More padding */
-            border-radius: 10px; /* More rounded */
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.4s ease-in-out;
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-            font-weight: 500;
-            min-width: 250px;
-            text-align: center;
-        }
-        .message-box.show {
-            opacity: 1;
-        }
-        footer {
-            width: 100%;
-            background-color: #1a202c; /* Darker footer */
-            color: #cbd5e0; /* Light gray text */
-            padding: 1rem 2rem;
-            text-align: center;
-            font-size: 0.9rem;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.15);
-            flex-shrink: 0; /* Prevent footer from shrinking */
-            margin-top: auto; /* Push footer to the bottom */
-        }
-    </style>
+    <title>BankWow - Your Financial Partner</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/base.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <header>
-        <div class="logo">BankWow</div>
-    </header>
-
-    <div class="main-content">
         <div class="container">
-            <!-- Balance Section -->
-            <div class="section">
-                <h2 class="text-indigo-700">Account Overview</h2>
-                <div class="balance-display">
-                    <h3>Your Current Balance</h3>
-                    <p>$<span id="balanceAmount">1000.00</span></p>
-                </div>
-                <p class="text-gray-600 text-center text-lg">Securely manage your finances with ease.</p>
-            </div>
-
-            <!-- Deposit Section -->
-            <div class="section">
-                <h2 class="text-green-700">Deposit Funds</h2>
-                <div class="form-group">
-                    <label for="depositAmount">Amount to Deposit</label>
-                    <input type="number" id="depositAmount" placeholder="e.g., 150.00" min="0" step="0.01">
-                </div>
-                <button id="depositBtn" class="btn btn-deposit">Deposit Now</button>
-            </div>
-
-            <!-- Withdraw Section -->
-            <div class="section">
-                <h2 class="text-red-700">Withdraw Funds</h2>
-                <div class="form-group">
-                    <label for="withdrawAmount">Amount to Withdraw</label>
-                    <input type="number" id="withdrawAmount" placeholder="e.g., 50.00" min="0" step="0.01">
-                </div>
-                <button id="withdrawBtn" class="btn btn-withdraw">Withdraw Now</button>
+            <a href="#" class="logo">BankWow</a>
+            <nav>
+                <ul>
+                    <li><a href="#">Accounts</a></li>
+                    <li><a href="#">Loans</a></li>
+                    <li><a href="#">Investments</a></li>
+                    <li><a href="#">Services</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+            <div>
+                <a href="#" class="cta-button">Login</a>
+                <a href="#" class="cta-button" style="margin-left: 10px;">Open Account</a>
             </div>
         </div>
-    </div>
+    </header>
 
-    <!-- Message Box for notifications -->
-    <div id="messageBox" class="message-box"></div>
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Your Future, Our Priority.</h1>
+                <p>BankWow provides trusted financial solutions to help you achieve your goals. Bank with confidence.</p>
+                <a href="#" class="cta-button">Learn More</a>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="container">
+                <h2>Our Core Services</h2>
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <h3><i class="fas fa-money-check-alt"></i> Personal Banking</h3>
+                        <p>Manage your daily finances with ease, from checking accounts to savings and credit cards.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3><i class="fas fa-home"></i> Home Loans</h3>
+                        <p>Achieve your dream of homeownership with our competitive and flexible mortgage options.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3><i class="fas fa-chart-line"></i> Investment Solutions</h3>
+                        <p>Grow your wealth with expert advice and a range of investment products tailored for you.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3><i class="fas fa-building"></i> Business Banking</h3>
+                        <p>Support your business growth with tailored banking solutions, lines of credit, and more.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="testimonials">
+            <div class="container">
+                <h2>What Our Customers Say</h2>
+                <div class="testimonial-carousel" id="testimonialCarousel">
+                    <div class="testimonial-item">
+                        <p>"BankWow has transformed the way I manage my money. Their online banking is intuitive and their customer service is top-notch!"</p>
+                        <div class="author">- Jane Doe, Small Business Owner</div>
+                    </div>
+                    <div class="testimonial-item">
+                        <p>"Getting a home loan through BankWow was a seamless process. The rates were great, and the team was incredibly supportive."</p>
+                        <div class="author">- John Smith, First-Time Homebuyer</div>
+                    </div>
+                    <div class="testimonial-item">
+                        <p>"I trust BankWow with my investments. Their financial advisors provide clear, actionable advice that has helped me immensely."</p>
+                        <div class="author">- Emily White, Investor</div>
+                    </div>
+                    <div class="testimonial-item">
+                        <p>"BankWow's mobile app makes banking on the go incredibly easy. I can pay bills, transfer funds, and check my balance anywhere."</p>
+                        <div class="author">- David Green, Tech Professional</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="call-to-action">
+            <div class="container">
+                <h2>Ready to Take Control of Your Finances?</h2>
+                <p>Join BankWow today and experience a new standard of banking excellence and personalized service.</p>
+                <a href="#" class="cta-button">Open an Account Today</a>
+            </div>
+        </section>
+    </main>
 
     <footer>
-        &copy; 2025 BankWow. All rights reserved.
+        <div class="container">
+            <div class="footer-column">
+                <h4>Products</h4>
+                <ul>
+                    <li><a href="#">Checking Accounts</a></li>
+                    <li><a href="#">Savings Accounts</a></li>
+                    <li><a href="#">Credit Cards</a></li>
+                    <li><a href="#">Mortgages</a></li>
+                    <li><a href="#">Personal Loans</a></li>
+                    <li><a href="#">Investments</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">FAQs</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Branch Locator</a></li>
+                    <li><a href="#">Security & Fraud</a></li>
+                    <li><a href="#">Accessibility</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>About BankWow</h4>
+                <ul>
+                    <li><a href="#">Our Story</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Newsroom</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Connect With Us</h4>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2025 BankWow. All rights reserved. Member FDIC. Equal Housing Lender.
+            </div>
+        </div>
     </footer>
 
-    <script>
-        // script.js - Conceptual separation
-        document.addEventListener('DOMContentLoaded', () => {
-            // Get DOM elements
-            const balanceAmountSpan = document.getElementById('balanceAmount');
-            const depositAmountInput = document.getElementById('depositAmount');
-            const depositBtn = document.getElementById('depositBtn');
-            const withdrawAmountInput = document.getElementById('withdrawAmount');
-            const withdrawBtn = document.getElementById('withdrawBtn');
-            const messageBox = document.getElementById('messageBox');
-
-            // Initial balance
-            let balance = 1000.00;
-
-            /**
-             * Updates the displayed balance on the UI.
-             */
-            function updateBalanceUI() {
-                balanceAmountSpan.textContent = balance.toFixed(2);
-            }
-
-            /**
-             * Displays a temporary message to the user.
-             * @param {string} message - The message to display.
-             * @param {string} type - The type of message (e.g., 'success', 'error').
-             */
-            function showMessage(message, type = 'info') {
-                messageBox.textContent = message;
-                // Apply type-specific background colors for better feedback
-                if (type === 'success') {
-                    messageBox.style.backgroundColor = '#10b981'; // Green-600
-                } else if (type === 'error') {
-                    messageBox.style.backgroundColor = '#ef4444'; // Red-500
-                } else {
-                    messageBox.style.backgroundColor = '#333'; // Default dark
-                }
-
-                messageBox.className = 'message-box show'; // Reset and show
-
-                setTimeout(() => {
-                    messageBox.classList.remove('show');
-                }, 3000); // Message disappears after 3 seconds
-            }
-
-            /**
-             * Handles the deposit operation.
-             */
-            depositBtn.addEventListener('click', () => {
-                const amount = parseFloat(depositAmountInput.value);
-
-                if (isNaN(amount) || amount <= 0) {
-                    showMessage('Please enter a valid positive deposit amount.', 'error');
-                    return;
-                }
-
-                balance += amount;
-                updateBalanceUI();
-                showMessage(`Successfully deposited $${amount.toFixed(2)}.`, 'success');
-                depositAmountInput.value = ''; // Clear input field
-            });
-
-            /**
-             * Handles the withdrawal operation.
-             */
-            withdrawBtn.addEventListener('click', () => {
-                const amount = parseFloat(withdrawAmountInput.value);
-
-                if (isNaN(amount) || amount <= 0) {
-                    showMessage('Please enter a valid positive withdrawal amount.', 'error');
-                    return;
-                }
-
-                if (amount > balance) {
-                    showMessage('Insufficient funds.', 'error');
-                    return;
-                }
-
-                balance -= amount;
-                updateBalanceUI();
-                showMessage(`Successfully withdrew $${amount.toFixed(2)}.`, 'success');
-                withdrawAmountInput.value = ''; // Clear input field
-            });
-
-            // Initialize UI with current balance
-            updateBalanceUI();
-        });
-    </script>
+    <script src="scripts/script.js"></script>
 </body>
 </html>
