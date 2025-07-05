@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BankWow</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* style.css - Conceptual separation */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 32px;
+            max-width: 900px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        @media (min-width: 768px) {
+            .container {
+                flex-direction: row;
+                gap: 40px;
+            }
+        }
+        .section {
+            flex: 1;
+            padding: 24px;
+            background-color: #f9fafb;
+            border-radius: 12px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        .section h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .balance-display {
+            background-color: #4f46e5; /* Indigo */
+            color: #ffffff;
+            padding: 24px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 24px;
+            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
+        }
+        .balance-display h3 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        .balance-display p {
+            font-size: 3rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 8px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #6366f1; /* Indigo-500 */
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .btn-deposit {
+            background-color: #22c55e; /* Green */
+        }
+        .btn-deposit:hover {
+            background-color: #16a34a;
+            transform: translateY(-2px);
+        }
+        .btn-withdraw {
+            background-color: #ef4444; /* Red */
+        }
+        .btn-withdraw:hover {
+            background-color: #dc2626;
+            transform: translateY(-2px);
+        }
+        .message-box {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        .message-box.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Balance Section -->
+        <div class="section">
+            <h2 class="text-indigo-700">Account Overview</h2>
+            <div class="balance-display">
+                <h3>Current Balance</h3>
+                <p>$<span id="balanceAmount">1000.00</span></p>
+            </div>
+            <p class="text-gray-600 text-center">Manage your funds easily and securely.</p>
+        </div>
+
+        <!-- Deposit Section -->
+        <div class="section">
+            <h2 class="text-green-700">Deposit Funds</h2>
+            <div class="form-group">
+                <label for="depositAmount">Amount to Deposit</label>
+                <input type="number" id="depositAmount" placeholder="Enter amount" min="0" step="0.01">
+            </div>
+            <button id="depositBtn" class="btn btn-deposit">Deposit</button>
+        </div>
+
+        <!-- Withdraw Section -->
+        <div class="section">
+            <h2 class="text-red-700">Withdraw Funds</h2>
+            <div class="form-group">
+                <label for="withdrawAmount">Amount to Withdraw</label>
+                <input type="number" id="withdrawAmount" placeholder="Enter amount" min="0" step="0.01">
+            </div>
+            <button id="withdrawBtn" class="btn btn-withdraw">Withdraw</button>
+        </div>
+    </div>
+
+    <!-- Message Box for notifications -->
+    <div id="messageBox" class="message-box"></div>
+
+    <script>
+        // script.js - Conceptual separation
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get DOM elements
+            const balanceAmountSpan = document.getElementById('balanceAmount');
+            const depositAmountInput = document.getElementById('depositAmount');
+            const depositBtn = document.getElementById('depositBtn');
+            const withdrawAmountInput = document.getElementById('withdrawAmount');
+            const withdrawBtn = document.getElementById('withdrawBtn');
+            const messageBox = document.getElementById('messageBox');
+
+            // Initial balance
+            let balance = 1000.00;
+
+            /**
+             * Updates the displayed balance on the UI.
+             */
+            function updateBalanceUI() {
+                balanceAmountSpan.textContent = balance.toFixed(2);
+            }
+
+            /**
+             * Displays a temporary message to the user.
+             * @param {string} message - The message to display.
+             * @param {string} type - The type of message (e.g., 'success', 'error').
+             */
+            function showMessage(message, type = 'info') {
+                messageBox.textContent = message;
+                messageBox.className = 'message-box show'; // Reset and show
+                // Add type-specific styling if needed (e.g., messageBox.classList.add(type))
+
+                setTimeout(() => {
+                    messageBox.classList.remove('show');
+                }, 3000); // Message disappears after 3 seconds
+            }
+
+            /**
+             * Handles the deposit operation.
+             */
+            depositBtn.addEventListener('click', () => {
+                const amount = parseFloat(depositAmountInput.value);
+
+                if (isNaN(amount) || amount <= 0) {
+                    showMessage('Please enter a valid positive deposit amount.', 'error');
+                    return;
+                }
+
+                balance += amount;
+                updateBalanceUI();
+                showMessage(`Successfully deposited $${amount.toFixed(2)}.`);
+                depositAmountInput.value = ''; // Clear input field
+            });
+
+            /**
+             * Handles the withdrawal operation.
+             */
+            withdrawBtn.addEventListener('click', () => {
+                const amount = parseFloat(withdrawAmountInput.value);
+
+                if (isNaN(amount) || amount <= 0) {
+                    showMessage('Please enter a valid positive withdrawal amount.', 'error');
+                    return;
+                }
+
+                if (amount > balance) {
+                    showMessage('Insufficient funds.', 'error');
+                    return;
+                }
+
+                balance -= amount;
+                updateBalanceUI();
+                showMessage(`Successfully withdrew $${amount.toFixed(2)}.`);
+                withdrawAmountInput.value = ''; // Clear input field
+            });
+
+            // Initialize UI with current balance
+            updateBalanceUI();
+        });
+    </script>
+</body>
+</html>
